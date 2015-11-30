@@ -1,20 +1,64 @@
-libmemcheck.so: memcheck.o
-	g++ -fPIC -shared -o libmemcheck.so memcheck.o
 
-memcheck.o: memcheck.cxx
-	g++ -O2 -Wall -c memcheck.cxx
+#
+# target
+#
+TARGET = a.out
 
-consoleapp: consoleapp.o
-	gcc -o consoleapp consoleapp.o -L. -lmemcheck
+#
+# source file
+#
+SRCCPP = main.cpp memcheck.cpp
+SRCC =
+MAKEFILE = makefile
 
-consoleapp.o: consoleapp.c
-	gcc -O2 -Wall -c consoleapp.c
+SRCS = $(SRCCPP) $(SRCC)
+OBJS = $(SRCCPP:.cpp=.o) $(SRCC:.c=.o)
+DEPENDFILES = $(SRCCPP:.cpp=.d) $(SRCC:.c=.d)
 
-sample: sample.o
-	gcc -o sample sample.o
+#
+# compile parameter
+#
+CC = g++
+CFLAGS = -g -O2 -Wall -std=c++11
+LDFLAGS =
+#CFLAGS = -g -O2 -Wall -fprofile-arcs -ftest-coverage
+INCDIR =
+LIBDIR =
+LIBS =
+#LIBS = -lgcov -lpthread
 
-sample.o: sample.c
-	gcc -c -O2 -Wall -c sample.c
+#
+# shell comannd
+#
+RM = rm -rf
+#RM = del
+
+# definition
+.SUFFIXES: .cxx .cpp .c .o .h .d
+.PHONY: clean all echo
+
+#
+# Rules
+#
+all: $(TARGET)
+
+echo:
+	@echo 'TARGET:$(TARGET)'
+	@echo 'SRCS:$(SRCS)'
+	@echo 'OBJS:$(OBJS)'
+
+$(TARGET): $(OBJS)
+	@echo 'Making $(TARGET)...'
+	-@ $(CC) $(LDFLAGS) -o $@ $^ $(LIBDIR) $(LIBS)
+
+.c.o:
+	$(CC) $(CFLAGS) -MMD -c $< $(INCDIR) -o $@
+
+.cpp.o:
+	$(CC) $(CFLAGS) -MMD -c $< $(INCDIR) -o $@
 
 clean:
-	rm libmemcheck.so memcheck.o consoleapp consoleapp.o sample sample.o
+	-@ $(RM) $(TARGET) $(DEPENDFILES) $(OBJS) *.d *.o *.obj *~ *.~* *.BAK
+
+# source and header file dependent
+-include $(DEPENDFILES)
