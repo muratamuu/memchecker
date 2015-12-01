@@ -180,7 +180,7 @@ static void(*org_free_hook)(void*, const void*);
 
 // weak symbol
 extern "C" {
-void (*__malloc_initialize_hook)(void) = hook_init;
+void (* volatile __malloc_initialize_hook)(void) = hook_init;
 }
 
 //
@@ -480,9 +480,9 @@ void printformat(struct memctx* ctx, unsigned long tagcount)
 
   printf("%s\n", head);
   for (unsigned long i = 1; i <= tagcount; ctx++, i++) {
-    printf("-- %-8s - %-8s - 0x%08x - 0x%08x - 0x%08x --\n",
-           ctx->pname, ctx->tname, (unsigned int)ctx->adr,
-           ctx->size, (unsigned int)ctx->ra);
+    printf("-- %-8s - %-8s - 0x%p - 0x%08x - 0x%p --\n",
+           ctx->pname, ctx->tname, ctx->adr,
+           ctx->size, ctx->ra);
     if (!(i%16)) {
       char inbuf[32];
       printf("--- quit[q] continue[Enter]->");

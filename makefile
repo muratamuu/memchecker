@@ -7,7 +7,7 @@ TARGET = a.out
 #
 # source file
 #
-SRCCPP = main.cpp memcheck.cpp
+SRCCPP = main.cpp
 SRCC =
 MAKEFILE = makefile
 
