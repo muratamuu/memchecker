@@ -19,7 +19,7 @@ DEPENDFILES = $(SRCCPP:.cpp=.d) $(SRCC:.c=.d)
 # compile parameter
 #
 CC = g++
-CFLAGS = -g -O2 -Wall -std=c++11
+CFLAGS = -g -O2 -Wall -std=c++11 -Wno-deprecated-declarations
 LDFLAGS =
 #CFLAGS = -g -O2 -Wall -fprofile-arcs -ftest-coverage
 INCDIR =
